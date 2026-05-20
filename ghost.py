@@ -16,6 +16,10 @@ def main():
         init_db()
         session_id = create_session(os.getcwd())
         print(f"Ghost is watching... Session ID: {session_id}")
+
+        from core.runner import run_process
+        run_process(["python", "test_error.py"])  #Popen expect a list where first iteam is the program and rest are passed arguments. its like similar as running python [filename].py
+
     elif args.command == "report":
         print("Generating report...")
 
