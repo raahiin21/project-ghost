@@ -52,3 +52,13 @@ def create_session(directory):
     conn.close()
 
     return session_id
+
+def log_error(session_id, error_type, message, file_name):
+    conn = get_connection()
+    cursor = conn.cursor()
+    current_timestamp = datetime.now().isoformat() 
+
+    cursor.execute("INSERT INTO errors (session_id, error_type, message, file_name,timestamp) VALUES (?,?,?,?,?)", (session_id, error_type, message, file_name, current_timestamp))
+
+    conn.commit()
+    conn.close()
