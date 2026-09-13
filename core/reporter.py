@@ -1,10 +1,15 @@
 from core.db import get_connection
+from core.patterns import analyze_patterns
 
-def generate_report():
+def generate_report(limit=5):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT id, started_at, directory FROM sessions ORDER BY id DESC")
+    if limit:
+        cursor.execute("SELECT id, started_at, directory FROM sessions ORDER BY id DESC LIMIT ?", (limit,))
+    else:
+        cursor.execute("SELECT id, started_at, directory FROM sessions ORDER BY id DESC")
+
     sessions =  cursor.fetchall()
 
     if not sessions:
@@ -26,6 +31,12 @@ def generate_report():
             for error in errors:
                 error_type, message, file_name = error
                 print(f" [{error_type} in {file_name}]")
+
+        insights = analyze_patterns(session_id)
+        if insights: 
+            print(f"\n [PATTERNS]")
+            for insights in insights:
+                print(f"    {insights}")
 
         else:
             print(f"No errors recorded")
