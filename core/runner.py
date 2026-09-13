@@ -1,9 +1,8 @@
-import subprocess        #tool to run external commands, launching other programs and interacting with system shell
-import sys               #This module provides direct access to all 'built-in'identifiers of Python; for example, builtins.len is the full name for the built-in function len().
+import subprocess        #tool to run external commands, launching other programs and interacting with system shell 
 
 from core.classifier import classify_error
 from core.db import log_error
-from core.analyzer import analyze_session
+from core.patterns import analyze_patterns
 
 def run_process(command, session_id):
     process = subprocess.Popen(  #used to intract with a process while its running
@@ -31,10 +30,10 @@ def run_process(command, session_id):
         print(f"Details: {last_line}")
         print(f"\nFull traceback:\n{full_traceback}")
 
-        print("\n Analayzing session patterns...")
-        analysis = analyze_session(session_id)
+        insights = analyze_patterns(session_id)
 
-        if analysis:
-            print(f"\n[GHOST ANALYSIS]\n{analysis}")
+        if insights:
+            print("\n[GHOST PATTERNS]")
 
-
+            for insight in insights:
+                print(f"  {insight}")
