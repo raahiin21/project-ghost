@@ -6,7 +6,7 @@ from rich import box
 console = Console()
 
 def print_banner():
-    console.print(Panel.fit("[vold cyan]GHOST[/bold cyan] - Seesion-aware error tracker", 
+    console.print(Panel.fit("[bold cyan]GHOST[/bold cyan] - Session-aware error tracker", 
     border_style="cyan"))
 
 def print_error(error_type, details, traceback):
@@ -33,7 +33,7 @@ def print_insights(insights):
         return
     console.print("\n[bold cyan][GHOST PATTERNS][/bold cyan]")
     for insight in insights:
-        console.print(f"[cyan],[cyan] {insights}")
+        console.print(f"[cyan] >> [/cyan] {insight}")
 
 def print_session_table(session_data):
     table = Table(box=box.SIMPLE, show_header=True, header_style="bold cyan")

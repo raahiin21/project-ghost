@@ -2,6 +2,7 @@ import argparse
 import os
 from core.db import init_db
 from core.db import create_session
+from core.runner import run_process
 from core.db import get_connection
 from core.reporter import generate_report
 from core.display import print_banner
@@ -13,6 +14,7 @@ def main():
     )
 
     parser.add_argument("command", choices=["watch", "report"], help="command to run")
+    parser.add_argument("target", nargs="*", help = "command to run your project i.e python app.py")
     parser.add_argument("--all", action="store_true", help="Show all session in report")
     parser.add_argument("--last", type=int, default=5, help="Number of recent sessions to show [deafult: 5]")
 
@@ -22,12 +24,13 @@ def main():
     if args.command == "watch":
         init_db()
         session_id = create_session(os.getcwd())
-        print(f"Ghost is watching... Session ID: {session_id}")
+
+        target = args.target if args.target else ["python","test_error.py"]
 
         print_banner()
+        print(f"Ghost is watching... Session ID: {session_id}")
 
-        from core.runner import run_process
-        run_process(["python", "test_error.py"], session_id)  #Popen expect a list where first iteam is the program and rest are passed arguments. its like similar as running python [filename].py
+        run_process(target, session_id)
 
     elif args.command == "report": 
         if args.all:

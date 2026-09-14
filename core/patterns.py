@@ -55,12 +55,12 @@ def analyze_patterns(session_id):
             }
 
             habit =  habit_map.get(error_type, "This error type is keep appearing, Please Investigate and fix the root cause.")
-            insights.append(f"[PATTERN]{error_type} appeared {count} time. {habit}")
+            insights.append(f"PATTERN {error_type} appeared {count} time. {habit}")
 
     # RULE 2 - Fragile file
     for file_name, count in file_counts:
         if count >= 3:
-            insights.append(f"[FRAGILE FILE] {file_name} produced {count} errors in this session alone. This file may have too many resposibilites/tasks or needs restructuring.")
+            insights.append(f"FRAGILE FILE {file_name} produced {count} errors in this session alone. This file may have too many resposibilites/tasks or needs restructuring.")
 
     # RULE 3- Session trend
     if len(recent_session) >= 3 :
@@ -73,20 +73,20 @@ def analyze_patterns(session_id):
         avg_previous =  sum (previous_count) / len(previous_count)        
 
         if current_count > avg_previous * 1.5:
-            insights.append(f"[TREND] Error count is rising. This session had {current_count} errors vs average of {avg_previous:.1f} in recent sessions. You may be moving into complex part without enough planning - ")
+            insights.append(f"TREND Error count is rising. This session had {current_count} errors vs average of {avg_previous:.1f} in recent sessions. You may be moving into complex part without enough planning - ")
 
         elif current_count < avg_previous * 0.5:
-            insights.append(f"[TREND] Improving. This session had {current_count} errors vs average of {avg_previous:.1f}. Keep the same approach going!")
+            insights.append(f"TREND Improving. This session had {current_count} errors vs average of {avg_previous:.1f}. Keep the same approach going!")
 
         else:
-            insights.append(f"[TREND] Stable. Consistent error rate across recent sessions..")
+            insights.append(f"TREND: Stable. Consistent error rate across recent sessions..")
 
     # RULE 4 - ERROR type dominance
     total_errors = len(errors)
     for error_type, count in type_counts.items(): # returns each key-value pair as a tuple. So each loop gives us two things at once: the error type as a string and its count as a number.
         percentage = (count/total_errors) * 100
         if percentage >= 60:
-            insights.append(f"[DOMINANCE]{int(percentage)}% of your errors in this session  were {error_type}. This is your main problem area right now.")
+            insights.append(f"DOMINANCE: {int(percentage)}% of your errors in this session were {error_type}. This is your main problem area right now.")
 
     # Rule 5 - Clean session streak
     streak = 0
@@ -97,10 +97,10 @@ def analyze_patterns(session_id):
         else:
             break
 
-        if streak >=2 :
-            insights.append(f"[STREAK] {streak} consecutive clean sessions. Good consistency.")
+    if streak >=2 :
+        insights.append(f"[STREAK] {streak} consecutive clean sessions. Good consistency.")
 
-        elif recent_session and recent_session[0][1] == 0 :
-            insights.append("[STREAK] Clean session. No errors this time.")
+    elif recent_session and recent_session[0][1] == 0 :
+        insights.append("[STREAK] Clean session. No errors this time.")
 
     return insights
