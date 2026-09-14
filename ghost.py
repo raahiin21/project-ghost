@@ -4,6 +4,7 @@ from core.db import init_db
 from core.db import create_session
 from core.db import get_connection
 from core.reporter import generate_report
+from core.display import print_banner
 
 def main():
     parser = argparse.ArgumentParser(
@@ -22,6 +23,8 @@ def main():
         init_db()
         session_id = create_session(os.getcwd())
         print(f"Ghost is watching... Session ID: {session_id}")
+
+        print_banner()
 
         from core.runner import run_process
         run_process(["python", "test_error.py"], session_id)  #Popen expect a list where first iteam is the program and rest are passed arguments. its like similar as running python [filename].py

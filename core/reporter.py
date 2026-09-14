@@ -1,5 +1,7 @@
 from core.db import get_connection
 from core.patterns import analyze_patterns
+from core.display import print_session_table
+from core.patterns import Counter
 
 def generate_report(limit=5):
     conn = get_connection()
@@ -17,28 +19,28 @@ def generate_report(limit=5):
         conn.close()
         return
     
+    rows=[]
+    
     for session in sessions:
         session_id, started_at, directory =  session
 
         cursor.execute("SELECT error_type, message, file_name FROM errors WHERE session_id =?", (session_id,))
         errors = cursor.fetchall()
 
-        print(f"\n SESSION {session_id} | {started_at}")
-        print(f" Directory: {directory}")
-        print(f" Errors caught: {len(errors)}")
+        error_count = len(errors)
 
         if errors:
-            for error in errors:
-                error_type, message, file_name = error
-                print(f" [{error_type} in {file_name}]")
-
-        insights = analyze_patterns(session_id)
-        if insights: 
-            print(f"\n [PATTERNS]")
-            for insights in insights:
-                print(f"    {insights}")
-
+            error_types = [e[0] for e in errors]
+            top_type = Counter(error_types).most_common(1)[0][0]
         else:
-            print(f"No errors recorded")
+            top_type = "None"
 
+        rows.append((
+            str(session_id),
+            started_at[:19],
+            str(error_count),
+            top_type
+        ))
+
+    print_session_table(rows)
     conn.close()

@@ -3,6 +3,7 @@ import subprocess        #tool to run external commands, launching other program
 from core.classifier import classify_error
 from core.db import log_error
 from core.patterns import analyze_patterns
+from core.display import print_error, print_insights
 
 def run_process(command, session_id):
     process = subprocess.Popen(  #used to intract with a process while its running
@@ -25,15 +26,6 @@ def run_process(command, session_id):
         error_type = classify_error(last_line) 
         error_log = log_error(session_id, error_type, last_line, file_name)
 
-        print(f"File name: {file_name}")
-        print(f"\n[GHOST CAUGHT — {error_type}]")
-        print(f"Details: {last_line}")
-        print(f"\nFull traceback:\n{full_traceback}")
-
+        print_error(error_type, last_line, full_traceback)
         insights = analyze_patterns(session_id)
-
-        if insights:
-            print("\n[GHOST PATTERNS]")
-
-            for insight in insights:
-                print(f"  {insight}")
+        print_insights(insights)
