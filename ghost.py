@@ -8,6 +8,7 @@ from core.db import get_connection
 from core.reporter import generate_report
 from core.display import print_banner
 from core.display import print_banner, print_watch_start
+from core.insights import generate_insights
 
 def main():
     parser = argparse.ArgumentParser(
@@ -15,7 +16,7 @@ def main():
         description="Session-aware error tracker for developers"
     )
 
-    parser.add_argument("command", choices=["watch", "report"], help="command to run")
+    parser.add_argument("command", choices=["watch", "report","insights"], help="command to run")
     parser.add_argument("target", nargs="*", help = "command to run your project i.e python app.py")
     parser.add_argument("--all", action="store_true", help="Show all session in report")
     parser.add_argument("--last", type=int, default=5, help="Number of recent sessions to show [deafult: 5]")
@@ -41,6 +42,9 @@ def main():
             generate_report(limit=None)
         else:
             generate_report(limit=args.last)
+
+    elif args.command == "insights":
+        generate_insights()
 
 #used to run the file if its being executed directly not if its being imported. else we can use main() too. 
 if __name__=="__main__":
