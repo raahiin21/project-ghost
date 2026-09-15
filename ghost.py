@@ -2,10 +2,12 @@ import argparse
 import os
 from core.db import init_db
 from core.db import create_session
+from core.db import close_session
 from core.runner import run_process
 from core.db import get_connection
 from core.reporter import generate_report
 from core.display import print_banner
+from core.display import print_banner, print_watch_start
 
 def main():
     parser = argparse.ArgumentParser(
@@ -28,9 +30,11 @@ def main():
         target = args.target if args.target else ["python","test_error.py"]
 
         print_banner()
-        print(f"Ghost is watching... Session ID: {session_id}")
+        print_watch_start(session_id, target)
 
         run_process(target, session_id)
+
+        close_session(session_id)
 
     elif args.command == "report": 
         if args.all:

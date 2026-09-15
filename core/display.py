@@ -9,6 +9,14 @@ def print_banner():
     console.print(Panel.fit("[bold cyan]GHOST[/bold cyan] - Session-aware error tracker", 
     border_style="cyan"))
 
+def print_watch_start(session_id, target):
+    console.print(Panel.fit(
+        f"[bold]Session ID:[/bold] [cyan]{session_id}[/cyan]\n"
+        f"[bold]Watching:[/bold] [green]{' '.join(target)}[/green]",
+        title="[bold cyan]GHOST WATCHING[/bold cyan]",
+        border_style="cyan"
+    ))
+
 def print_error(error_type, details, traceback):
     color_map = {
         "RUNTIME": "red",
@@ -39,8 +47,10 @@ def print_session_table(session_data):
     table = Table(box=box.SIMPLE, show_header=True, header_style="bold cyan")
     table.add_column("Session", style="dim")
     table.add_column("Started")
+    table.add_column("Duration")
     table.add_column("Errors", justify="center")
     table.add_column("Top Error Type")
+    table.add_column("Files")
 
     for row in session_data:
         table.add_row(*row)

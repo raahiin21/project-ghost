@@ -21,6 +21,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS sessions(
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                    started_at TEXT,
+                   ended_at TEXT,
                    directory TEXT
                    )     
    """)
@@ -52,6 +53,15 @@ def create_session(directory):
     conn.close()
 
     return session_id
+
+def close_session(session_id):
+    conn = get_connection()
+    cursor =  conn.cursor()
+    ended_at = datetime.now().isoformat()
+    cursor.execute("UPDATE sessions SET ended_at = ? WHERE id = ?", (ended_at, session_id))
+    conn.commit()
+    conn.close()
+
 
 def log_error(session_id, error_type, message, file_name):
     conn = get_connection()

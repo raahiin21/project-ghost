@@ -17,7 +17,7 @@ def run_process(command, session_id):
     file_name = command[1]
 
     #readlines(): works on a file or stream object, reads lines as they come, keeps the \n at the end of each line
-    #splitlines(): works on a string (as I we are using communictae() which returns string), splits it by line breaks, and automatically strips the \n cleanly
+    #splitlines(): works on a string (as we are using communictae() which returns string), splits it by line breaks, and automatically strips the \n cleanly
 
     if stderr:
         stderr_lines = stderr.strip().splitlines()
